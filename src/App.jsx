@@ -1,9 +1,13 @@
 import React from 'react';
 
-const App = () => (
-  <>
-    Hello world
-  </>
-);
+import Questions from './components/Questions';
+import AddButton from './components/AddButton';
 
-export default App;
+export default function App() {
+  return (
+    <>
+      <Questions />
+      <AddButton />
+    </>
+  );
+}

@@ -1,10 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import { Provider } from 'react-redux';
+
+import store from './store';
+
+import ConfirmServiceProvider from './providers/ConfirmServiceProvider';
 import App from './App';
 
-const el = document.getElementById('app');
 ReactDOM.render(
-  <App />,
-  el,
+  <Provider store={store}>
+    <ConfirmServiceProvider>
+      <App />
+    </ConfirmServiceProvider>
+  </Provider>,
+  document.getElementById('app'),
 );
