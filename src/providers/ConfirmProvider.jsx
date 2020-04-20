@@ -1,44 +1,41 @@
-import React, {
-  createContext, useState, useRef, useContext,
-} from 'react';
+import React, { createContext, useState, useRef } from 'react';
 
 import ConfirmDialog from '../components/ConfirmDialog';
 
-const ConfirmationServiceContext = createContext();
+export const ConfirmContext = createContext();
 
-export const useConfirmation = () => useContext(ConfirmationServiceContext);
-
-export default function ConfirmationServiceProvider({ children }) {
+export default function ConfirmProvider({ children }) {
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState({});
 
-  const awaitingPromiseRef = useRef();
+  const resolverRef = useRef();
 
   const openConfirmation = (params) => {
     setOptions(params);
     setOpen(true);
+
     return new Promise((resolve) => {
-      awaitingPromiseRef.current = { resolve };
+      resolverRef.current = { resolve };
     });
   };
 
   const handleClose = () => {
-    awaitingPromiseRef.current.resolve(false);
+    resolverRef.current.resolve(false);
 
     setOpen(false);
   };
 
   const handleSubmit = () => {
-    awaitingPromiseRef.current.resolve(true);
+    resolverRef.current.resolve(true);
 
     setOpen(false);
   };
 
   return (
     <>
-      <ConfirmationServiceContext.Provider value={openConfirmation}>
+      <ConfirmContext.Provider value={openConfirmation}>
         {children}
-      </ConfirmationServiceContext.Provider>
+      </ConfirmContext.Provider>
 
       <ConfirmDialog
         open={open}

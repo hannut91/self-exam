@@ -5,14 +5,15 @@ import { Provider } from 'react-redux';
 
 import store from './store';
 
-import ConfirmServiceProvider from './providers/ConfirmServiceProvider';
+import ConfirmProvider from './providers/ConfirmProvider';
+
 import App from './App';
 
 ReactDOM.render(
   <Provider store={store}>
-    <ConfirmServiceProvider>
+    <ConfirmProvider>
       <App />
-    </ConfirmServiceProvider>
+    </ConfirmProvider>
   </Provider>,
   document.getElementById('app'),
 );
