@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 
 import { useDispatch } from 'react-redux';
 
@@ -10,7 +10,8 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 import Button from '@material-ui/core/Button';
 
 import { deleteQuestion } from '../slice';
-import { useConfirmation } from '../providers/ConfirmServiceProvider';
+
+import { ConfirmContext } from '../providers/ConfirmProvider';
 
 const styles = {
   description: {
@@ -18,8 +19,9 @@ const styles = {
   },
 };
 
-const Question = ({ question }) => {
-  const confirm = useConfirmation();
+const Question = (props) => {
+  const { question } = props;
+  const confirm = useContext(ConfirmContext);
   const dispatch = useDispatch();
   const [q, setQuestion] = useState({});
 
