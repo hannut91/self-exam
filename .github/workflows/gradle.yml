@@ -1,0 +1,23 @@
+name: Server build
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: servers
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Java JDK
+        uses: actions/setup-java@v1.3.0
+        with:
+          java-version: 14.0.1
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Build
+        run: ./gradlew build
+      - name: Test
+        run: ./gradlew test
+
