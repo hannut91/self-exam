@@ -11,12 +11,11 @@ class QuestionRepositoryImpl : QuestionRepository {
     private lateinit var jdbcTemplate: JdbcTemplate
 
     override fun findAll(): List<Question> = jdbcTemplate.query(
-            "SELECT * FROM question"
+            "SELECT * FROM questions"
     ) { rs, _ ->
         Question(
                 id = rs.getLong("id"),
                 question = rs.getString("question")
         )
     }
-
 }
