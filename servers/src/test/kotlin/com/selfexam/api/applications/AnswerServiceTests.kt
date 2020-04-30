@@ -28,16 +28,13 @@ internal class AnswerServiceTests {
         val questionId = 1L
         val mockAnswers = listOf(
                 Answer(
-                        id = 1,
-                        questionId = questionId,
                         answer = "관계형 모델은 실제 세계의 데이터를",
-                        wordOrder = 1
+                        answerOrder = 1
                 ),
                 Answer(
-                        id = 1,
-                        questionId = questionId,
+                        answerId = 1,
                         answer = "라는 개념을 사용해 구현한 데이터 모델이다.",
-                        wordOrder = 2,
+                        answerOrder = 2,
                         word = "관계"
                 )
         )
