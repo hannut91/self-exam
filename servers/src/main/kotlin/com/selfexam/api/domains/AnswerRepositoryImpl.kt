@@ -12,43 +12,39 @@ class AnswerRepositoryImpl : AnswerRepository {
 
     override fun findAll(questionId: Long): List<Answer> = jdbcTemplate.query(
             """
-SELECT 
-	0 as answer_id, 
-    answer_order, 
-    answer, 
-    "" as word 
-FROM 
+SELECT
+	0 as word_id,
+    answer_order,
+    answer
+FROM
 	answers_without_word
 WHERE
     question_id = ?
-UNION SELECT 
-	answer_id, 
-    answer_order, 
-    answer, 
-    word 
+UNION SELECT
+	word_id,
+    answer_order,
+    answer
 FROM (
-    SELECT 
-		answers_with_word.id as answer_id, 
-		answer_order, 
-		answer, 
-        word_id
-	FROM 
-		answers_with_word 
+    SELECT
+		answers_with_word.id as word_id,
+		answer_order,
+		answer
+	FROM
+		answers_with_word
 	WHERE
 		question_id = ?
-) f0 
-JOIN 
-    words 
-ON 
-f0.word_id = words.id;
-
-""", arrayOf<Any>(questionId, questionId)
+) f0
+JOIN
+    words
+ON
+    f0.word_id = words.id;
+""",
+            arrayOf<Any>(questionId, questionId)
     ) { rs, _ ->
         Answer(
-                answerId = rs.getLong("answer_id"),
+                wordId = rs.getLong("word_id"),
                 answer = rs.getString("answer"),
-                answerOrder = rs.getInt("answer_order"),
-                word = rs.getString("word")
+                answerOrder = rs.getInt("answer_order")
         )
     }
 

@@ -28,22 +28,22 @@ internal class AnswerServiceTests {
         val questionId = 1L
         val mockAnswers = listOf(
                 Answer(
+                        wordId = 0,
                         answer = "관계형 모델은 실제 세계의 데이터를",
                         answerOrder = 1
                 ),
                 Answer(
-                        answerId = 1,
+                        wordId = 1,
                         answer = "라는 개념을 사용해 구현한 데이터 모델이다.",
-                        answerOrder = 2,
-                        word = "관계"
+                        answerOrder = 2
                 )
         )
         given(answerRepository.findAll(questionId)).willReturn(mockAnswers)
 
         val answers = answerService.getAnswers(questionId)
 
-        assertThat(answers[0].word).isEqualTo(mockAnswers[0].word)
-        assertThat(answers[1].word).isEqualTo(mockAnswers[1].word)
+        assertThat(answers[0].wordId).isEqualTo(mockAnswers[0].wordId)
+        assertThat(answers[1].wordId).isEqualTo(mockAnswers[1].wordId)
     }
 
 }
