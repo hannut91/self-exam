@@ -1,8 +1,8 @@
 package com.selfexam.api.controllers
 
+import com.google.gson.Gson
 import com.selfexam.api.applications.AnswerService
 import com.selfexam.api.domains.Answer
-import org.hamcrest.Matchers.containsString
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,25 +23,26 @@ internal class AnswerControllerTests {
     private lateinit var answerService: AnswerService
 
     @Test
-    fun `Answer responses answers`() {
+    fun `Get answers responses answers`() {
         val questionId = 1L
         val answers = listOf(
                 Answer(
+                        wordId = 0,
                         answer = "관계형 모델은 실제 세계의 데이터를",
                         answerOrder = 1
                 ),
                 Answer(
-                        answerId = 1,
+                        wordId = 1,
                         answer = "라는 개념을 사용해 구현한 데이터 모델이다.",
-                        answerOrder = 2,
-                        word = "관계"
+                        answerOrder = 2
                 )
         )
+
         given(answerService.getAnswers(questionId)).willReturn(answers)
 
         mvc.perform(get("/answers/$questionId"))
                 .andExpect(status().isOk)
-                .andExpect(content().string(containsString("관계형 모델")))
+                .andExpect(content().json(Gson().toJson(answers)))
     }
 
 }

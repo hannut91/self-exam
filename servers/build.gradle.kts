@@ -40,6 +40,9 @@ dependencies {
     runtimeOnly("mysql:mysql-connector-java")
     implementation("org.mariadb.jdbc:mariadb-java-client:2.6.0")
 
+    // Lib
+    implementation("com.google.code.gson:gson:2.8.6")
+
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
