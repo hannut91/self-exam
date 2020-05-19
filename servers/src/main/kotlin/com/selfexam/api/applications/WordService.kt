@@ -8,4 +8,6 @@ class WordService(private val wordRepository: WordRepository) {
 
     fun getWord(id: Long) = wordRepository.findOne(id)
 
+    fun getWordsWith(questionId: Long) = wordRepository.findWith(questionId)
+
 }

@@ -2,6 +2,7 @@ package com.selfexam.api.applications
 
 import com.selfexam.api.domains.Word
 import com.selfexam.api.domains.WordRepository
+import com.selfexam.api.domains.Words
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -34,4 +35,15 @@ internal class WordServiceTests {
         assertThat(word?.word).isEqualTo("단어")
     }
 
+    @Test
+    fun `getWordsWith returns words`() {
+        val questionId = 1L
+
+        val mockWords = Words(listOf(Word(word = "단어")))
+        given(wordRepository.findWith(questionId)).willReturn(mockWords)
+
+        val words = wordService.getWordsWith(questionId)
+
+        assertThat(words).isEqualTo(mockWords)
+    }
 }

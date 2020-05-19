@@ -1,37 +1,21 @@
-const getNextId = () => {
-  const id = localStorage.getItem('nextId');
-  if (!id) {
-    localStorage.setItem('nextId', '2');
-    return 1;
-  }
+import axios from 'axios';
+import url from 'url';
 
-  localStorage.setItem('nextId', (Number(id) + 1).toString());
-  return Number(id);
+import { SERVER_URL } from '../config';
+
+export const getQuestions = async () => {
+  const { data } = await axios.get(url.resolve(SERVER_URL, '/questions'));
+  return data;
 };
 
-export const getQuestions = () => {
-  const questions = localStorage.getItem('questions');
-  if (!questions) {
-    return [];
-  }
-
-  return JSON.parse(questions);
-};
-
-export const addQuestion = (question) => {
-  const nextId = getNextId();
-
-  const questions = getQuestions();
-  localStorage.setItem('questions', JSON.stringify([...questions, {
-    id: nextId,
-    ...question,
-  }]));
-};
-
-export const removeQuestion = (id) => {
-  const questions = getQuestions();
-
-  localStorage.setItem('questions', JSON.stringify(
-    questions.filter((it) => it.id !== id),
-  ));
+export const getCorrects = async ({ questionId, answers }) => {
+  const endpoint = url.resolve(SERVER_URL, `/questions/${questionId}/corrects`);
+  const params = {
+    words: Object.keys(answers).map((it) => ({ id: it, word: answers[it] })),
+  };
+  const { data } = await axios.post(endpoint, params);
+  return {
+    questionId,
+    corrects: data,
+  };
 };

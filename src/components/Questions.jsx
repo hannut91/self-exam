@@ -26,12 +26,15 @@ const Questions = () => {
 
   return (
     <>
-      <List
-        aria-labelledby="nested-list-subheader"
-        css={styles.root}
-      >
-        {questions.map((it) => <Question question={it} key={it.id} />)}
-      </List>
+      {questions.length > 0
+        && (
+        <List
+          aria-labelledby="nested-list-subheader"
+          css={styles.root}
+        >
+          {questions.map((it) => <Question question={it} key={it.id} />)}
+        </List>
+        )}
     </>
   );
 };

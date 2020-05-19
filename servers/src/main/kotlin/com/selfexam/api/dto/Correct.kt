@@ -1,3 +1,7 @@
 package com.selfexam.api.dto
 
-data class Correct(val isCorrect: Boolean)
+data class Correct(
+        val wordId: Long,
+        val isCorrect: Boolean,
+        val word: String = ""
+)

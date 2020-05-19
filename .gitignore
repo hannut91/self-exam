@@ -4,3 +4,5 @@ dist
 
 # CodeceptJS
 output
+
+.env
