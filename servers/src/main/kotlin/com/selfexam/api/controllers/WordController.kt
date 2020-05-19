@@ -23,7 +23,7 @@ class WordController {
         val w = wordService.getWord(wordId)
                 ?: throw WordNotFoundException(wordId)
 
-        return Correct(w.isCorrect(word))
+        return Correct(wordId = wordId, isCorrect = w.isCorrect(word))
     }
 
 }

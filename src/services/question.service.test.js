@@ -1,67 +1,50 @@
-import { getQuestions, addQuestion, removeQuestion } from './question.service';
+import axios from 'axios';
+
+import { getQuestions, getCorrects } from './question.service';
 
 describe('QuestionService', () => {
-  beforeEach(() => {
-    localStorage.setItem('questions', '');
-    localStorage.setItem('nextId', '');
-  });
-
-  afterEach(() => {
-    localStorage.setItem('questions', '');
-    localStorage.setItem('nextId', '');
-  });
+  jest.mock('axios');
 
   describe('getQuestions', () => {
     const mockQuestions = [{
       id: 1,
       question: '질문',
-      answer: '답변',
     }];
 
     beforeEach(() => {
-      localStorage.setItem('questions', JSON.stringify(mockQuestions));
+      axios.get = jest.fn().mockResolvedValue({ data: mockQuestions });
     });
 
-    it('returns questions', () => {
-      const questions = getQuestions();
+    it('returns questions', async () => {
+      const questions = await getQuestions();
 
       expect(questions).toEqual(mockQuestions);
     });
   });
 
-  describe('addQuestion', () => {
-    const question = {
-      question: '질문',
-      answer: '대답',
-    };
-
-    it('appends question', () => {
-      addQuestion(question);
-      addQuestion(question);
-
-      const questions = getQuestions();
-
-      expect(questions[0].id).toBe(1);
-      expect(questions[1].id).toBe(2);
-    });
-  });
-
-  describe('deleteQuestion', () => {
-    const question = {
-      question: '질문',
-      answer: '대답',
+  describe('getCorrects', () => {
+    const questionId = 1;
+    const answers = {
+      1: '단어',
+      2: '답변',
     };
 
     beforeEach(() => {
-      addQuestion(question);
+      axios.post = jest.fn().mockResolvedValue({
+        data: [{
+          wordId: 1,
+          isCorrect: true,
+        }, {
+          wordId: 1,
+          isCorrect: true,
+        }],
+      });
     });
 
-    it('deletes question by id', () => {
-      removeQuestion(1);
+    it('returns corrects', async () => {
+      const { corrects } = await getCorrects({ questionId, answers });
 
-      const questions = getQuestions();
-
-      expect(questions.length).toBe(0);
+      corrects.forEach((it) => expect(it.isCorrect).toBe(true));
     });
   });
 });

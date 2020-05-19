@@ -1,10 +1,19 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import {
-  addQuestion,
-  getQuestions,
-  removeQuestion,
+  getQuestions, getCorrects,
 } from './services/question.service';
+import { getAnswers } from './services/answer.service';
+
+export const fetchQuestions = createAsyncThunk('fetchQuestions',
+  async () => await getQuestions());
+
+export const fetchAnswers = createAsyncThunk('fetchAnswers',
+  async (questionId) => await getAnswers(questionId));
+
+export const fetchCorrects = createAsyncThunk(
+  'fetchCorrects', async ({ questionId, answers }) => await getCorrects({ questionId, answers }),
+);
 
 const { actions, reducer } = createSlice({
   name: 'app',
@@ -13,22 +22,49 @@ const { actions, reducer } = createSlice({
     questions: [],
   },
   reducers: {
-    toggleIsAdding: (state) => ({ ...state, isAdding: !state.isAdding }),
-    createQuestion: (state, { payload }) => {
-      addQuestion(payload);
-      const questions = getQuestions();
+    toggleQuestion: (state, { payload }) => ({
+      ...state,
+      questions: state.questions.map((it) => (it.id === payload ? { ...it, open: !it.open } : it)),
+    }),
+  },
+  extraReducers: {
+    [fetchQuestions.fulfilled]: (state, { payload: questions }) => ({
+      ...state,
+      questions,
+    }),
+    [fetchAnswers.fulfilled]: (state, { payload }) => ({
+      ...state,
+      questions: state.questions.map((it) => (
+        it.id === payload.questionId
+          ? { ...it, answers: payload.answers }
+          : it)),
+    }),
+    [fetchCorrects.fulfilled]: (state, { payload }) => {
+      const { questionId, corrects } = payload;
+
       return {
         ...state,
-        questions,
-      };
-    },
-    fetchQuestions: (state) => ({ ...state, questions: getQuestions() }),
-    deleteQuestion: (state, { payload: id }) => {
-      removeQuestion(id);
-      const questions = getQuestions();
-      return {
-        ...state,
-        questions,
+        questions: state.questions.map((question) => {
+          if (question.id !== questionId) {
+            return question;
+          }
+
+          return {
+            ...question,
+            answers: question.answers.map((answer) => {
+              const correct = corrects.find((it) => it.wordId === answer.wordId);
+              if (!correct) {
+                return answer;
+              }
+
+              return {
+                ...answer,
+                word: correct.word,
+                isCorrect: correct.isCorrect,
+              };
+            }),
+          };
+        }),
       };
     },
   },
@@ -37,8 +73,8 @@ const { actions, reducer } = createSlice({
 export const {
   toggleIsAdding,
   createQuestion,
-  fetchQuestions,
   deleteQuestion,
+  toggleQuestion,
 } = actions;
 
 export default reducer;

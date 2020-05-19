@@ -25,6 +25,9 @@ module.exports = {
   ],
   rules: {
     'react/prop-types': 'off',
+    'import/prefer-default-export': 1,
+    'no-return-await': 1,
+    'react/no-array-index-key': 1,
   },
   ignorePatterns: ['assets'],
   settings: {

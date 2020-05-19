@@ -1,9 +1,8 @@
 package com.selfexam.api.controllers
 
-import com.google.gson.Gson
 import com.selfexam.api.applications.WordService
 import com.selfexam.api.domains.Word
-import com.selfexam.api.dto.Correct
+import org.hamcrest.Matchers.containsString
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
@@ -31,7 +30,7 @@ internal class WordControllerTests {
 
         mvc.perform(get("/words/$wordId?word=${word.word}"))
                 .andExpect(status().isOk)
-                .andExpect(content().json(Gson().toJson(Correct(true))))
+                .andExpect(content().string(containsString("true")))
     }
 
     @Test
@@ -42,7 +41,7 @@ internal class WordControllerTests {
 
         mvc.perform(get("/words/$wordId?word=OTHER"))
                 .andExpect(status().isOk)
-                .andExpect(content().json(Gson().toJson(Correct(false))))
+                .andExpect(content().string(containsString("false")))
     }
 
     @Test
